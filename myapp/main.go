@@ -23,8 +23,9 @@ type application struct {
 func main() {
 	c := initApplication()
 	go c.listenForShutdown()
-	err := c.App.ListenAndServe()
-	c.App.ErrorLog.Println(err)
+	// err := c.App.ListenAndServe()
+	// c.App.ErrorLog.Println(err)
+	c.App.ListenAndServe()
 }
 
 func (a *application) shutdown() {

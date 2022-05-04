@@ -17,6 +17,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
 	"github.com/tsawler/celeritas/cache"
+	"github.com/tsawler/celeritas/filesystems/miniofilesystem"
 	"github.com/tsawler/celeritas/mailer"
 	"github.com/tsawler/celeritas/render"
 	"github.com/tsawler/celeritas/session"
@@ -49,6 +50,7 @@ type Celeritas struct {
 	Scheduler     *cron.Cron
 	Mail          mailer.Mail
 	Server        Server
+	FileSystems   map[string]interface{}
 }
 
 type Server struct {
@@ -205,6 +207,7 @@ func (c *Celeritas) New(rootPath string) error {
 	}
 
 	c.createRenderer()
+	c.FileSystems = c.createFileSystems()
 	go c.Mail.ListenForMail()
 
 	return nil
@@ -375,4 +378,27 @@ func (c *Celeritas) BuildDSN() string {
 	}
 
 	return dsn
+}
+
+func (c *Celeritas) createFileSystems() map[string]interface{} {
+	fileSystems := make(map[string]interface{})
+
+	if os.Getenv("MINIO_SECRET") != "" {
+		useSSL := false
+		if strings.ToLower(os.Getenv("MINIO_USESSL")) == "true" {
+			useSSL = true
+		}
+
+		minio := miniofilesystem.Minio{
+			Endpoint: os.Getenv("MINIO_ENDPOINT"),
+			Key:      os.Getenv("MINIO_KEY"),
+			Secret:   os.Getenv("MINIO_SECRET"),
+			UseSSL:   useSSL,
+			Region:   os.Getenv("MINIO_REGION"),
+			Bucket:   os.Getenv("MINIO_BUCKET"),
+		}
+		fileSystems["MINIO"] = minio
+	}
+
+	return fileSystems
 }

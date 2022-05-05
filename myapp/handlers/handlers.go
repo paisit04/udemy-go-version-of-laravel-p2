@@ -12,6 +12,7 @@ import (
 	"github.com/tsawler/celeritas"
 	"github.com/tsawler/celeritas/filesystems"
 	"github.com/tsawler/celeritas/filesystems/miniofilesystem"
+	"github.com/tsawler/celeritas/filesystems/sftpfilesystem"
 )
 
 // Handlers is the type for handlers, and gives access to Celeritas and models
@@ -49,6 +50,10 @@ func (h *Handlers) ListFS(w http.ResponseWriter, r *http.Request) {
 			f := h.App.FileSystems["MINIO"].(miniofilesystem.Minio)
 			fs = &f
 			fsType = "MINIO"
+		case "SFTP":
+			f := h.App.FileSystems["SFTP"].(sftpfilesystem.SFTP)
+			fs = &f
+			fsType = "SFTP"
 		}
 
 		l, err := fs.List(curPath)
@@ -99,6 +104,13 @@ func (h *Handlers) PostUploadToFS(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+	case "SFTP":
+		fs := h.App.FileSystems["SFTP"].(sftpfilesystem.SFTP)
+		err = fs.Put(fileName, "")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	h.App.Session.Put(r.Context(), "flash", "File uploaded!")
@@ -135,6 +147,9 @@ func (h *Handlers) DeleteFromFS(w http.ResponseWriter, r *http.Request) {
 	switch fsType {
 	case "MINIO":
 		f := h.App.FileSystems["MINIO"].(miniofilesystem.Minio)
+		fs = &f
+	case "SFTP":
+		f := h.App.FileSystems["SFTP"].(sftpfilesystem.SFTP)
 		fs = &f
 	}
 

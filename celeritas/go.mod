@@ -80,6 +80,7 @@ require (
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect
 	github.com/klauspost/compress v1.13.5 // indirect
 	github.com/klauspost/cpuid v1.3.1 // indirect
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/mailgun/mailgun-go/v4 v4.5.3 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
@@ -98,6 +99,7 @@ require (
 	github.com/ory/dockertest v3.3.5+incompatible // indirect
 	github.com/ory/dockertest/v3 v3.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pkg/sftp v1.13.4 // indirect
 	github.com/rs/xid v1.2.1 // indirect
 	github.com/sendgrid/rest v2.6.5+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.10.1+incompatible // indirect

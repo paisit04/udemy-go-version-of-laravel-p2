@@ -18,6 +18,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/tsawler/celeritas/cache"
 	"github.com/tsawler/celeritas/filesystems/miniofilesystem"
+	"github.com/tsawler/celeritas/filesystems/sftpfilesystem"
 	"github.com/tsawler/celeritas/mailer"
 	"github.com/tsawler/celeritas/render"
 	"github.com/tsawler/celeritas/session"
@@ -398,6 +399,16 @@ func (c *Celeritas) createFileSystems() map[string]interface{} {
 			Bucket:   os.Getenv("MINIO_BUCKET"),
 		}
 		fileSystems["MINIO"] = minio
+	}
+
+	if os.Getenv("SFTP_HOST") != "" {
+		sftp := sftpfilesystem.SFTP{
+			Host: os.Getenv("SFTP_HOST"),
+			User: os.Getenv("SFTP_USER"),
+			Pass: os.Getenv("SFTP_PASS"),
+			Port: os.Getenv("SFTP_PORT"),
+		}
+		fileSystems["SFTP"] = sftp
 	}
 
 	return fileSystems

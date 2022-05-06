@@ -210,3 +210,10 @@ func (h *Handlers) DeleteFromFS(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/list-fs?fs-type="+fsType, http.StatusSeeOther)
 	}
 }
+
+func (h *Handlers) Clicker(w http.ResponseWriter, r *http.Request) {
+	err := h.render(w, r, "tester", nil, nil)
+	if err != nil {
+		h.App.ErrorLog.Println(err)
+	}
+}

@@ -2,17 +2,18 @@ package handlers
 
 import (
 	"context"
+	"log"
+	"net/http"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/CloudyKit/jet/v6"
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/tsawler/celeritas"
 	"github.com/tsawler/celeritas/mailer"
 	"github.com/tsawler/celeritas/render"
-	"log"
-	"net/http"
-	"os"
-	"testing"
-	"time"
 )
 
 var cel celeritas.Celeritas
@@ -70,6 +71,7 @@ func getRoutes() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(cel.SessionLoad)
 	mux.Get("/", testHandlers.Home)
+	mux.Get("/tester", testHandlers.Clicker)
 	fileServer := http.FileServer(http.Dir("./../public"))
 	mux.Handle("/public/*", http.StripPrefix("/public", fileServer))
 	return mux
